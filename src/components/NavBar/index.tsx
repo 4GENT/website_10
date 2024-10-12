@@ -28,15 +28,18 @@ const Navbar: React.FC = () => {
 
 	return (
 		<>
-			<AppBar position="static" className="bg-black shadow-md w-full rounded-lg">
+			<AppBar
+				position="static"
+				style={{ background: "linear-gradient(to right, #001F3F, #8E24AA)" }}
+				className="shadow-md w-full rounded-lg"
+			>
 				<Toolbar className="flex justify-between w-full">
-					{/* Блок для навигационных ссылок */}
 					<div className="flex space-x-4 flex-grow">
 						<Link
 							to="/"
 							className="hover:bg-blue-800 text-white px-4 py-2 rounded flex items-center justify-center"
 						>
-							Домой
+							На главную страницу
 						</Link>
 						<Link
 							to="/about"
@@ -66,7 +69,7 @@ const Navbar: React.FC = () => {
 							to="/sports"
 							className="hover:bg-blue-800 text-white px-4 py-2 rounded flex items-center justify-center"
 						>
-							Спортокиада
+							Спорт
 						</Link>
 						<Link
 							to="/science"
@@ -76,7 +79,6 @@ const Navbar: React.FC = () => {
 						</Link>
 					</div>
 
-					{/* Блок для кнопок регистрации и авторизации */}
 					<div className="flex space-x-4">
 						<Button
 							variant="contained"
@@ -97,7 +99,6 @@ const Navbar: React.FC = () => {
 					</div>
 				</Toolbar>
 			</AppBar>
-			{/* Модальные окна */}
 			<RegistrationModal
 				open={isRegistrationOpen}
 				onClose={handleRegistrationClose}

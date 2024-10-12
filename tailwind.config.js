@@ -1,12 +1,11 @@
 module.exports = {
 	content: [
-		"./src/**/*.{js,jsx,ts,tsx}", // Указываем путь ко всем файлам в папке src
+		"./src/**/*.{js,jsx,ts,tsx}",
 	],
 	theme: {
 		extend: {
 			backgroundImage: {
-				"custom-gradient":
-					"linear-gradient(315deg, rgba(0,0,0,1) 14%, rgba(191,22,199,1) 60%, rgba(0,41,185,1) 100%)",
+				"gradient-custom": "linear-gradient(135deg, #0d1b2a, #1b263b 50%, #f72585)",
 			},
 		},
 	},

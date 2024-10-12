@@ -2,8 +2,36 @@ import React from "react";
 
 const AboutUs: React.FC = () => {
 	return (
-		<div className="bg-gradient-to-r from-black to-blue-900 min-h-screen flex items-center justify-center text-white">
-			<h1 className="text-4xl font-bold">О нас</h1>
+		<div className="min-h-screen flex flex-col items-center justify-start text-white p-4">
+			<h1 className="text-4xl font-bold mb-6">О нас</h1>
+			<p className="mb-4 text-lg">
+				Десятка — это сообщество студентов кафедры ИУ-10, занимающейся Защитой информации. Мы
+				стремимся создать дружескую атмосферу, где каждый может найти единомышленников и проводить
+				время с пользой.
+			</p>
+			<p className="mb-4 text-lg">
+				Наши встречи и мероприятия включают в себя не только учебные аспекты, но и развлекательные
+				активности. Мы организуем различные мастер-классы, турниры и культурные мероприятия. У нас
+				есть возможность расширить свои знания и навыки в области информационной безопасности, а
+				также просто весело провести время с друзьями.
+			</p>
+			<p className="mb-4 text-lg">
+				Мы всегда рады новым участникам! Если вы хотите узнать больше о нашем сообществе, посетите
+				наши встречи и следите за новостями. Не упустите шанс стать частью команды, которая
+				разделяет вашу страсть к информационной безопасности и новым технологиям!
+			</p>
+			<p className="mb-4 text-lg">
+				Хотите узнать больше о наших мероприятиях? Смотрите наше{" "}
+				<a
+					href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="text-blue-400 underline"
+				>
+					видео
+				</a>
+				и присоединяйтесь к нам!
+			</p>
 		</div>
 	);
 };
