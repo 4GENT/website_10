@@ -13,7 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 interface RegistrationModalProps {
 	open: boolean;
 	onClose: () => void;
-	onSwitchToLogin: () => void; // Функция для перехода на авторизацию
+	onSwitchToLogin: () => void;
 }
 
 const RegistrationModal: React.FC<RegistrationModalProps> = ({
@@ -33,10 +33,9 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
 	};
 
 	const handleSubmit = () => {
-		// Логика регистрации
 		console.log("Логин:", login);
 		console.log("Пароль:", password);
-		onClose(); // Закрыть модальное окно после регистрации
+		onClose();
 	};
 
 	return (
