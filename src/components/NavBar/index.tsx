@@ -1,29 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import RegistrationModal from "../RegistrationModal";
 import LoginModal from "../LoginModal";
+import { fetchUser, logoutUser } from "../../utils/axios/AuthService";
 
 const Navbar: React.FC = () => {
-	const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
-	const [isLoginOpen, setIsLoginOpen] = useState(false);
+	const [isRegistrationOpen, setIsRegistrationOpen] = useState<boolean>(false);
+	const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
+	const [username, setUsername] = useState<string | null>(null);
 
-	const handleRegistrationOpen = () => setIsRegistrationOpen(true);
-	const handleRegistrationClose = () => setIsRegistrationOpen(false);
-
-	const handleLoginOpen = () => setIsLoginOpen(true);
-	const handleLoginClose = () => setIsLoginOpen(false);
-
-	const handleSwitchToLogin = () => {
-		setIsRegistrationOpen(false);
-		handleLoginOpen();
+	const handleUserLogin = (newUsername: string) => {
+		setUsername(newUsername);
 	};
 
-	const handleSwitchToRegistration = () => {
-		setIsLoginOpen(false);
-		handleRegistrationOpen();
+	useEffect(() => {
+		const loadUser = async () => {
+			try {
+				const user = await fetchUser();
+				if (user?.username) {
+					setUsername(user.username);
+				}
+			} catch (error) {
+				console.error("Ошибка загрузки пользователя:", error);
+			}
+		};
+
+		loadUser();
+	}, []);
+
+	const handleLogout = async () => {
+		await logoutUser();
+		setUsername(null);
 	};
 
 	return (
@@ -80,34 +90,60 @@ const Navbar: React.FC = () => {
 					</div>
 
 					<div className="flex space-x-4">
-						<Button
-							variant="contained"
-							color="primary"
-							className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 mr-2"
-							onClick={handleRegistrationOpen}
-						>
-							Регистрация
-						</Button>
-						<Button
-							variant="contained"
-							color="primary"
-							className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2"
-							onClick={handleLoginOpen}
-						>
-							Авторизация
-						</Button>
+						{username ? (
+							<>
+								<span className="text-white px-4 py-2">{username}</span>
+								<Button
+									variant="contained"
+									color="secondary"
+									className="text-white"
+									onClick={handleLogout}
+								>
+									Выйти
+								</Button>
+							</>
+						) : (
+							<>
+								<Button
+									variant="contained"
+									color="primary"
+									className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 mr-2"
+									onClick={() => setIsRegistrationOpen(true)}
+								>
+									Регистрация
+								</Button>
+								<Button
+									variant="contained"
+									color="primary"
+									className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2"
+									onClick={() => setIsLoginOpen(true)}
+								>
+									Авторизация
+								</Button>
+							</>
+						)}
 					</div>
 				</Toolbar>
 			</AppBar>
+
 			<RegistrationModal
 				open={isRegistrationOpen}
-				onClose={handleRegistrationClose}
-				onSwitchToLogin={handleSwitchToLogin}
+				onClose={() => setIsRegistrationOpen(false)}
+				onSwitchToLogin={() => {
+					setIsRegistrationOpen(false);
+					setIsLoginOpen(true);
+				}}
+				onUserLogin={handleUserLogin}
 			/>
+
 			<LoginModal
 				open={isLoginOpen}
-				onClose={handleLoginClose}
-				onSwitchToRegistration={handleSwitchToRegistration}
+				onClose={() => setIsLoginOpen(false)}
+				onSwitchToRegistration={() => {
+					setIsLoginOpen(false);
+					setIsRegistrationOpen(true);
+				}}
+				onUserLogin={handleUserLogin}
 			/>
 		</>
 	);

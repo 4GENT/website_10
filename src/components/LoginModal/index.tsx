@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import {
 	Dialog,
 	DialogActions,
@@ -7,31 +7,57 @@ import {
 	IconButton,
 	TextField,
 	Button,
+	Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { loginUser } from "../../utils/axios/AuthService";
+import { AxiosError } from "axios";
 
 interface LoginModalProps {
 	open: boolean;
 	onClose: () => void;
 	onSwitchToRegistration: () => void;
+	onUserLogin: (username: string, token: string) => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSwitchToRegistration }) => {
-	const [login, setLogin] = useState("");
-	const [password, setPassword] = useState("");
+const LoginModal: React.FC<LoginModalProps> = ({
+	open,
+	onClose,
+	onSwitchToRegistration,
+	onUserLogin,
+}) => {
+	const [login, setLogin] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
+	const [errorMessage, setErrorMessage] = useState<string>("");
 
-	const handleLoginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleLoginChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setLogin(event.target.value);
 	};
 
-	const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setPassword(event.target.value);
 	};
 
-	const handleSubmit = () => {
-		console.log("Логин:", login);
-		console.log("Пароль:", password);
-		onClose();
+	const handleSubmit = async () => {
+		try {
+			const response = await loginUser({ username: login, password });
+			console.log("Пользователь авторизован:", response.username);
+			localStorage.setItem("token", response.token);
+			onUserLogin(response.username, response.token);
+			setErrorMessage("");
+			onClose();
+		} catch (error) {
+			console.error("Ошибка авторизации:", error);
+			if (error instanceof AxiosError) {
+				if (error.response && error.response.status === 401) {
+					setErrorMessage("Неверный логин или пароль.");
+				} else {
+					setErrorMessage("Произошла ошибка при авторизации. Попробуйте снова.");
+				}
+			} else {
+				setErrorMessage("Произошла неизвестная ошибка. Попробуйте снова.");
+			}
+		}
 	};
 
 	return (
@@ -70,6 +96,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSwitchToRegist
 					value={password}
 					onChange={handlePasswordChange}
 				/>
+				{errorMessage && (
+					<Typography color="error" variant="body2" style={{ marginTop: 10 }}>
+						{errorMessage}
+					</Typography>
+				)}
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={onClose} color="primary">
@@ -79,7 +110,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSwitchToRegist
 					Войти
 				</Button>
 				<Button onClick={onSwitchToRegistration} color="primary">
-					Нет аккаунта? Зарегистрироваться
+					Еще нет аккаунта? Зарегистрироваться
 				</Button>
 			</DialogActions>
 		</Dialog>
